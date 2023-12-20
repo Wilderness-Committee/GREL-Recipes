@@ -11,20 +11,50 @@ Will insert a space between the two groups of three characters. Matches two grou
 
 
 ### Canadian Province Code Formatting
-province_map = {
-    "Alberta": "AB",
-    "British Columbia": "BC",
-    "Manitoba": "MB",
-    "New Brunswick": "NB",
-    "Newfoundland and Labrador": "NL",
-    "Nova Scotia": "NS",
-    "Ontario": "ON",
-    "Prince Edward Island": "PE",
-    "Quebec": "QC",
-    "Saskatchewan": "SK",
-    "Northwest Territories": "NT",
-    "Nunavut": "NU",
-    "Yukon": "YT"
-}
 
-return province_map.get(value, value)  # 'value' is the cell value in OpenRefine
+Will abbreviate full Canadian province name to abbreviated form.
+
+    province_map = {
+        "Alberta": "AB",
+        "British Columbia": "BC",
+        "Manitoba": "MB",
+        "New Brunswick": "NB",
+        "Newfoundland and Labrador": "NL",
+        "Nova Scotia": "NS",
+        "Ontario": "ON",
+        "Prince Edward Island": "PE",
+        "Quebec": "QC",
+        "Saskatchewan": "SK",
+        "Northwest Territories": "NT",
+        "Nunavut": "NU",
+        "Yukon": "YT"
+    }
+    
+    return province_map.get(value, value)  # 'value' is the cell value in OpenRefine
+
+
+### Street type mappings
+
+Will abbreviate full street/road designation to abbreviated form.
+
+    street_types = {
+        "Street": "St",
+        "Road": "Rd",
+        "Avenue": "Ave",
+        "Boulevard": "Blvd",
+        "Drive": "Dr",
+        "Lane": "Ln",
+        "Court": "Ct",
+        # Add more mappings as needed
+    }
+    
+    # Abbreviate street types in the address
+    found = False
+    for full, abbrev in street_types.items():
+        if full in value:
+            value = value.replace(full, abbrev)
+            found = True
+            break  # Stop after the first replacement
+    
+    # Output the modified value, or the original value if no replacement was made
+    return value if found else value
