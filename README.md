@@ -45,6 +45,9 @@ Will abbreviate full street/road designation to abbreviated form.
         "Drive": "Dr",
         "Lane": "Ln",
         "Court": "Ct",
+        "Green": "Grn",
+        "Place": "Pl",
+        "Crescent": "Cres",
         # Add more mappings as needed
     }
     
@@ -58,3 +61,10 @@ Will abbreviate full street/road designation to abbreviated form.
     
     # Output the modified value, or the original value if no replacement was made
     return value if found else value
+
+
+### Leading and Trailing Characters
+
+Will remove special characters (!@#$%^&*()<>?:"{}|[]\;',./) from the start and end of a field.
+
+    value.replace(/(^[\p{P}\p{S}]+|[\p{P}\p{S}]+$)/, "")
