@@ -62,6 +62,44 @@ Will abbreviate full street/road designation to abbreviated form.
     # Output the modified value, or the original value if no replacement was made
     return value if found else value
 
+### Correct Name Capitalization - Accounts for Mc, Mac, O' prefixes and hyphenated names
+
+    def custom_title_case(name):
+        # Define a list of conjunctions and prepositions to keep in lowercase
+        lowercase_words = ["&"]
+        words = name.split()
+        capitalized_words = []
+        for word in words:
+            # Check if word is a special lowercase word
+            if word.lower() in lowercase_words:
+                capitalized_words.append(word.lower())
+                continue
+        
+        if '-' in word:
+            # Capitalize after hyphen
+            parts = word.split('-')
+            capitalized_parts = [part.capitalize() for part in parts]
+            capitalized_words.append('-'.join(capitalized_parts))
+        else:
+            # Capitalize first letter of each word
+            word = word.capitalize()
+            # Handle Mc and Mac prefixes more accurately
+            if word.startswith('Mc'):
+                word = 'Mc' + word[2:].capitalize()
+            elif word.startswith('Mac') and len(word) > 3 and word[3].isalpha():
+                word = 'Mac' + word[3:].capitalize()
+            elif "'" in word:
+                # Handle names with apostrophes
+                parts = word.split("'")
+                capitalized_parts = [part.capitalize() for part in parts]
+                word = "'".join(capitalized_parts)
+            capitalized_words.append(word)
+    return ' '.join(capitalized_words)
+
+return custom_title_case(value)
+
+
+
 
 ### Leading and Trailing Characters
 
