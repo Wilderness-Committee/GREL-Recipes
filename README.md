@@ -109,7 +109,7 @@ Will remove special characters (!@#$%^&*()<>?:"{}|[]\;',./) from the start and e
 
 ### Phone Number Formatting
 
-Will remove area international code if present and format phone numbers as (604) 123-4567
+Will remove area/international calling code if present and format phone numbers as (604) 123-4567
 
     def formatPhoneNumber(value):
         # Strip all non-digit characters from the input
