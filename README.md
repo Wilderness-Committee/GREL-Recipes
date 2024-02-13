@@ -62,7 +62,9 @@ Will abbreviate full street/road designation to abbreviated form.
     # Output the modified value, or the original value if no replacement was made
     return value if found else value
 
-### Correct Name Capitalization - Accounts for Mc, Mac, O' prefixes and hyphenated names
+### Correct Name Capitalization
+
+Accounts for Mc, Mac, O' prefixes and hyphenated names
 
     def custom_title_case(name):
         # Define a list of conjunctions and prepositions to keep in lowercase
@@ -96,7 +98,7 @@ Will abbreviate full street/road designation to abbreviated form.
             capitalized_words.append(word)
     return ' '.join(capitalized_words)
 
-return custom_title_case(value)
+    return custom_title_case(value)
 
 
 
