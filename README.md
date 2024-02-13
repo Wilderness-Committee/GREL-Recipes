@@ -106,3 +106,25 @@ return custom_title_case(value)
 Will remove special characters (!@#$%^&*()<>?:"{}|[]\;',./) from the start and end of a field.
 
     value.replace(/(^[\p{P}\p{S}]+|[\p{P}\p{S}]+$)/, "")
+
+### Phone Number Formatting
+
+Will remove area international code if present and format phone numbers as (604) 123-4567
+
+    def formatPhoneNumber(value):
+        # Strip all non-digit characters from the input
+        digits = ''.join(c for c in value if c.isdigit())
+        
+        # Assuming US/Canada phone numbers, strip country code if present
+        if len(digits) == 11 and digits.startswith("1"):
+            digits = digits[1:]
+        
+        # Format the number with area code if it has the correct length
+        if len(digits) == 10:
+            # Format as (XXX) XXX-XXXX
+            return "({}) {}-{}".format(digits[0:3], digits[3:6], digits[6:])
+        else:
+            # Return the original value if it doesn't match expected criteria
+            return value
+    
+    return formatPhoneNumber(value)
