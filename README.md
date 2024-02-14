@@ -100,9 +100,6 @@ Accounts for Mc, Mac, O' prefixes and hyphenated names
 
     return custom_title_case(value)
 
-
-
-
 ### Leading and Trailing Characters
 
 Will remove special characters (!@#$%^&*()<>?:"{}|[]\;',./) from the start and end of a field.
@@ -130,3 +127,18 @@ Will remove area/international calling code if present and format phone numbers 
             return value
     
     return formatPhoneNumber(value)
+
+### Address Clean-up
+
+Will remove '.', ',' and newline characters and place address on a single line.
+
+    def clean_address(value):
+        if value is None:
+            return None
+        # Remove all commas and periods
+        no_commas_periods = value.replace(',', '').replace('.', '')
+        # Replace newlines with a space
+        single_line_address = no_commas_periods.replace('\n', ' ').replace('\r', ' ')
+        return single_line_address
+    
+    return clean_address(value)
