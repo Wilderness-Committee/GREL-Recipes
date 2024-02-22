@@ -173,80 +173,77 @@ Will abbreviate full street/road designation to abbreviated form.
 ### Correct Name Capitalization
 
 Accounts for Mc, Mac, O' prefixes and hyphenated names as well as acronyms (V.I.P.) and apostrophes (Beaux's vs O'Donnell)
-
-    def custom_title_case(name):
-        """
-        Adjusted function to handle capitalization correctly, especially for names starting with "O'" and
-        ensuring that the letter following the apostrophe is capitalized only if it's not a single letter,
-        addressing the specific cases like "Beaux's" vs. "O'Donnell".
-        """
-        # Define a list of conjunctions and prepositions to keep in lowercase
-        lowercase_words = ["&"]
     
-        # Placeholder for periods within acronyms and abbreviations
+       def custom_title_case(name):
+        """
+        Processes a string to capitalize the first letter of each word, taking into account periods, acronyms,
+        hyphenated words, prefixes like Mc/Mac, and words with apostrophes correctly.
+        
+        Args:
+        name (str): The string to be processed.
+        
+        Returns:
+        str: The processed string with appropriate capitalization and spacing.
+        """
+    
+        # Replace periods in acronyms and after abbreviations to maintain correct formatting
         period_placeholder = "||PERIOD||"
         name_with_placeholder = name.replace(".", period_placeholder)
     
-        # Split the input into segments to handle sentence and word capitalization separately
+        # Split the input into segments based on placeholder to handle sentence capitalization
         segments = name_with_placeholder.split(period_placeholder)
         capitalized_segments = []
     
         for segment in segments:
             words = segment.split()
             capitalized_words = []
-    
             for word in words:
-                # Handle lowercase words
-                if word.lower() in lowercase_words:
-                    capitalized_words.append(word.lower())
-                    continue
-    
-                # Capitalize after hyphens
                 if '-' in word:
+                    # Capitalize each part of hyphenated words
                     parts = word.split('-')
                     capitalized_parts = [part.capitalize() for part in parts]
-                    capitalized_words.append('-'.join(capitalized_parts))
-                else:
-                    # Special handling for "Mc", "Mac", and "O'" prefixes
-                    if word.lower().startswith("mc"):
-                        word = 'Mc' + word[2:].capitalize()
-                    elif word.lower().startswith("mac") and len(word) > 3:
-                        word = 'Mac' + word[3:].capitalize()
-                    
-                    # Handle "O'" prefix correctly, capitalizing following letter only if not a single letter
-                    if word.lower().startswith("o'") and len(word) > 2:
-                        word = "O'" + word[2:].capitalize()
-                    elif "'" in word and (len(word.split("'")[1]) == 1 or word.lower().startswith("o'")):
-                        # Do not auto-capitalize single letters after apostrophes or handle "O'" specifically
-                        parts = word.split("'")
-                        if len(parts) > 1 and len(parts[1]) > 0:
-                            word = parts[0].capitalize() + "'" + (parts[1][0].upper() + parts[1][1:] if len(parts[1]) > 1 else parts[1].lower())
-                        else:
-                            word = word.capitalize()
+                    word = '-'.join(capitalized_parts)
+                elif "'" in word:
+                    # Special handling for apostrophes, capitalizing correctly based on following letters
+                    parts = word.split("'")
+                    if len(parts) > 1 and len(parts[1]) > 1:
+                        # Capitalize after apostrophe only if it's not a single letter
+                        parts = [parts[0].capitalize(), parts[1].capitalize()]
                     else:
-                        word = word.capitalize()
+                        parts = [parts[0].capitalize()] + parts[1:]
+                    word = "'".join(parts)
+                else:
+                    # General capitalization for words without hyphens or apostrophes
+                    word = word.capitalize()
     
-                    capitalized_words.append(word)
+                # Additional handling for Mc and Mac prefixes
+                if word.startswith('Mc'):
+                    word = 'Mc' + word[2:].capitalize()
+                elif word.startswith('Mac') and len(word) > 3 and word[3].isalpha():
+                    word = 'Mac' + word[3:].capitalize()
+    
+                capitalized_words.append(word)
     
             # Join the words back into a segment
             capitalized_segment = ' '.join(capitalized_words).strip()
             if capitalized_segment:
-                # Capitalize the first character of the segment
+                # Capitalize the first letter of the segment, if not already uppercase
                 capitalized_segment = capitalized_segment[0].upper() + capitalized_segment[1:]
                 capitalized_segments.append(capitalized_segment)
             else:
                 capitalized_segments.append('')
     
-        # Join the segments back together, restoring periods
+        # Join the segments back, replacing placeholders with periods
         result = period_placeholder.join(capitalized_segments).strip()
         final_result = result.replace(period_placeholder, ".")
     
-        # Insert spaces after periods where appropriate
+        # Insert spaces after periods where necessary, except in acronyms
         corrected_result = ""
         i = 0
         while i < len(final_result):
             corrected_result += final_result[i]
             if final_result[i] == "." and i+1 < len(final_result) and final_result[i+1].isalpha() and (i+2 < len(final_result) and final_result[i+2].isalpha()):
+                # Ensure space after periods when followed by two or more letters
                 corrected_result += " "
             i += 1
     
@@ -262,6 +259,7 @@ Accounts for Mc, Mac, O' prefixes and hyphenated names as well as acronyms (V.I.
 Will remove special characters (!@#$%^&*()<>?:"{}|[]\;',./) from the start and end of a field.
 
     value.replace(/(^[\p{P}\p{S}]+|[\p{P}\p{S}]+$)/, "")
+
 
 ### Phone Number Formatting
 
