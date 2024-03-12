@@ -323,9 +323,3 @@ Will correct case for number place. Example: 1st Place, 2ND Prize, 3rD Option, 4
         # Replace all found matches with their lowercase version
         formatted_text = re.sub(pattern, to_lowercase, text, flags=re.IGNORECASE)
         return formatted_text
-    
-    # Example usage
-    # Assuming 'value' is a string variable that contains the text to be formatted
-    value = "Example: 1st Place, 2ND Prize, 3rD Option, 4TH Choice."
-    formatted_text = format_position_abbreviations(value)
-    print(formatted_text)
