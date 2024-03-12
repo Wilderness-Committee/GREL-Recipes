@@ -37,6 +37,8 @@ Will abbreviate full Canadian province name to abbreviated form.
 
 Will abbreviate full street/road designation to abbreviated form.
 
+    import re
+    
     street_types = {
         'Abbey': 'Abbey',
          'Acres': 'Acres',
@@ -162,16 +164,19 @@ Will abbreviate full street/road designation to abbreviated form.
     lower_case_street_types = {k.lower(): v for k, v in street_types.items()}
     
     found = False
+    value_lower = value.lower()
     for full, abbrev in lower_case_street_types.items():
-        if full in value.lower():
-            # Find the start of the match to preserve the original case in the replacement
-            start_index = value.lower().find(full)
-            if start_index != -1:
-                # Replace the matched part with its abbreviation preserving the original text's case
-                original_full = value[start_index:start_index+len(full)]
-                value = value.replace(original_full, abbrev)
+        # Using regex to find standalone words only. '\b' is a word boundary in regex.
+        pattern = r'\b' + re.escape(full) + r'\b'
+        matches = list(re.finditer(pattern, value_lower))
+        if matches:
+            for match in matches:
+                # Extract the matched part from the original value to preserve its case
+                original_full = value[match.start():match.end()]
+                # Replace the matched part with its abbreviation
+                value = value[:match.start()] + value[match.start():match.end()].replace(original_full, abbrev) + value[match.end():]
                 found = True
-                break  # Stop after the first replacement
+            break  # Assuming only one type of street suffix will be present, we stop after the first match
     
     # Output the modified value, or the original value if no replacement was made
     return value if found else value
