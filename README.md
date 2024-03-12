@@ -158,13 +158,20 @@ Will abbreviate full street/road designation to abbreviated form.
         # Add more mappings as needed
     }
     
-    # Abbreviate street types in the address
+    # Create a temporary dictionary with lower-cased keys for case-insensitive comparison
+    lower_case_street_types = {k.lower(): v for k, v in street_types.items()}
+    
     found = False
-    for full, abbrev in street_types.items():
-        if full in value:
-            value = value.replace(full, abbrev)
-            found = True
-            break  # Stop after the first replacement
+    for full, abbrev in lower_case_street_types.items():
+        if full in value.lower():
+            # Find the start of the match to preserve the original case in the replacement
+            start_index = value.lower().find(full)
+            if start_index != -1:
+                # Replace the matched part with its abbreviation preserving the original text's case
+                original_full = value[start_index:start_index+len(full)]
+                value = value.replace(original_full, abbrev)
+                found = True
+                break  # Stop after the first replacement
     
     # Output the modified value, or the original value if no replacement was made
     return value if found else value
