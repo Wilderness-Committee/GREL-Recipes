@@ -297,3 +297,35 @@ Will remove '.', ',' and newline characters and place address on a single line.
         return single_line_address
     
     return clean_address(value)
+
+### Street Number Position Clean
+
+Will correct case for number place. Example: 1st Place, 2ND Prize, 3rD Option, 4TH Choice.
+
+
+    import re
+    
+    def format_position_abbreviations(text):
+        """
+        Regular expression to find position abbreviations:
+        - \b asserts position at a word boundary,
+        - \d+ matches one or more digits,
+        - (?:st|nd|rd|th) is a non-capturing group for the suffixes,
+        - \b asserts position at a word boundary,
+        - flags=re.IGNORECASE makes the match case-insensitive.
+        """
+        pattern = r'\b\d+(?:st|nd|rd|th)\b'
+        
+        # Function to convert matched string to lowercase
+        def to_lowercase(match):
+            return match.group().lower()
+        
+        # Replace all found matches with their lowercase version
+        formatted_text = re.sub(pattern, to_lowercase, text, flags=re.IGNORECASE)
+        return formatted_text
+    
+    # Example usage
+    # Assuming 'value' is a string variable that contains the text to be formatted
+    value = "Example: 1st Place, 2ND Prize, 3rD Option, 4TH Choice."
+    formatted_text = format_position_abbreviations(value)
+    print(formatted_text)
