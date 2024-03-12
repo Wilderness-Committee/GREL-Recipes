@@ -335,3 +335,6 @@ Will correct case for number place. Example: 1st Place, 2ND Prize, 3rD Option, 4
         # Replace all found matches with their lowercase version
         formatted_text = re.sub(pattern, to_lowercase, text, flags=re.IGNORECASE)
         return formatted_text
+    
+    formatted_text = format_position_abbreviations(value)
+    return(formatted_text)
