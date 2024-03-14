@@ -377,3 +377,37 @@ Will capture Apt, Unit and # and move to front of string. Will move street direc
     
     # Apply the transformation
     return transform_address(value)
+
+
+### Rural Road Capture
+
+rr to RR
+
+    def clean_string(value):
+        if value is None:
+            return None
+    
+        # Temporarily swap 'RR ' with a placeholder to avoid double conversion
+        placeholder = "##RR##"
+        value = value.replace('RR ', placeholder)
+    
+        # Make the string lowercase for initial check and then capitalize the first 'rr '
+        if value.lower().startswith('rr '):
+            value = 'RR ' + value[3:]
+    
+        # Replace all occurrences of 'rr ' regardless of case with ' RR '
+        # Using regular expression for case-insensitive replacement
+        import re
+        value = re.sub(r'\brr\s', 'RR ', value, flags=re.IGNORECASE)
+    
+        # Replace placeholder with 'RR ' again
+        value = value.replace(placeholder, 'RR ')
+    
+        return value
+    
+    # Example usage
+    sample_input = "rr this is a rR test Rr string with RR at the start and rr in between"
+    formatted_string = clean_string(sample_input)
+    print(formatted_string)
+
+
