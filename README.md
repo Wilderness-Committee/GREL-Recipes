@@ -379,6 +379,8 @@ Will capture Apt, Unit and # and move to front of string. Will move street direc
     return transform_address(value)
 
 
+# Fixes
+
 ### Rural Road Capture
 
 rr to RR
@@ -409,5 +411,40 @@ rr to RR
     sample_input = "rr this is a rR test Rr string with RR at the start and rr in between"
     formatted_string = clean_string(sample_input)
     print(formatted_string)
+
+### Parkway fix
+
+Use regular expressions to replace 'Pky' or 'Pkwy' with 'Parkway', case-insensitive
+
+    import re
+    
+    def replace_pky_with_parkway(value):
+        if value is None:
+            return None
+    
+        # Use regular expressions to replace 'Pky' or 'Pkwy' with 'Parkway', case-insensitive
+        value = re.sub(r'(?i)\bpky\b', 'Parkway', value)
+        value = re.sub(r'(?i)\bpkwy\b', 'Parkway', value)
+    
+        return value
+    
+    return replace_pky_with_parkway(value)
+
+### Field fix
+
+Replace occurrences of '*Field' with 'field', ignoring standalone 'Field'
+
+    import re
+    
+    def correct_field_suffix(value):
+        if value is None:
+            return None
+        
+        # Replace occurrences of '*Field' with 'field', ignoring standalone 'Field'
+        corrected_value = re.sub(r'(\S)Field\b', r'\1field', value, flags=re.IGNORECASE)
+    
+        return corrected_value
+    
+    return correct_field_suffix(value)
 
 
