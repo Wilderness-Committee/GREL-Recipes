@@ -338,3 +338,41 @@ Will correct case for number place. Example: 1st Place, 2ND Prize, 3rD Option, 4
     
     formatted_text = format_position_abbreviations(value)
     return(formatted_text)
+
+
+### Street Direction Clean and Apt # Placement
+
+Will capture Apt and # and move to front of string. Will move street direction to end of string all uppercase.
+
+    import re
+    
+    def transform_address(value):
+        # Function to handle replacement of 'apt' and '#' prefixes
+        def replace_prefix(match):
+            # The number with the potential letter is in group 2 due to the 'apt' pattern
+            number_with_optional_letter = match.group(2) if match.group(1).lower() == 'apt' else match.group(1)
+            # Remove the original match from the value and prepend the transformed prefix
+            return re.sub(re.escape(match.group(0)), '', value).strip(), number_with_optional_letter + '-'
+    
+        # Search for '#number' or 'apt number' patterns and replace
+        for pattern in [r'\#(\d+)', r'\b(apt|Apt|APT)\s*(\d+[A-Za-z]?)\b']:
+            match = re.search(pattern, value)
+            if match:
+                value, new_prefix = replace_prefix(match)
+                value = new_prefix + value
+                break  # Since we've transformed the value, no need to check the next pattern
+    
+        # Pattern to find standalone directions not preceded by an apostrophe
+        direction_pattern = r'(?<!\')[\b\s]((?:n|s|e|w|nw|ne|sw|se)\b)'
+        
+        # Search for directions and move to the end in uppercase
+        direction_matches = re.finditer(direction_pattern, value, re.IGNORECASE)
+        for match in direction_matches:
+            # Append the direction at the end in uppercase
+            value = re.sub(direction_pattern, '', value, flags=re.IGNORECASE).strip() + ' ' + match.group(1).upper()
+            break  # Assuming only one direction per address
+    
+        return value.strip()
+    
+    # Apply the transformation
+    return transform_address(value)
